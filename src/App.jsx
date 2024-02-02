@@ -9,6 +9,8 @@ const App = () => {
   const [lastPlayed, setLastPlayed] = useState(null);
   const [audioFile, setAudioFile] = useState(null);
 
+  const audioRef = useRef(null);
+
   useEffect(() => {
     // Retrieve last played audio from browser storage on component mount
     const storedPlaylist = JSON.parse(localStorage.getItem("playlist")) || [];
@@ -66,7 +68,7 @@ const App = () => {
 
     const newPlaylist = [
       ...playlist,
-      ...fileArray.map((file) => ({ name: file.name })),
+      ...fileArray.map((file) => ({ name: file.name, file })),
     ];
 
     setPlaylist(newPlaylist);
@@ -81,6 +83,9 @@ const App = () => {
       };
       reader.readAsDataURL(file);
     });
+
+    // Auto-play the newly added file
+    setCurrentAudioIndex(newPlaylist.length - 1);
   };
 
   const handlePlaylistItemClick = (index) => {
@@ -94,12 +99,33 @@ const App = () => {
 
   const handleTimeUpdate = (currentTime) => {
     // Update last played position in browser storage
-    setLastPlayed({
+    setLastPlayed((prevLastPlayed) => ({
       index: currentAudioIndex,
       position: Math.floor(currentTime),
-    });
+    }));
     localStorage.setItem("lastPlayed", JSON.stringify(lastPlayed));
   };
+
+  useEffect(() => {
+    const loadAudio = async () => {
+      if (audioFile && audioRef.current) {
+        const blob = new Blob([audioFile], { type: audioFile.type });
+        audioRef.current.src = URL.createObjectURL(blob);
+
+        // Check if there's a stored last played position
+        const storedLastPlayed =
+          JSON.parse(localStorage.getItem("lastPlayed")) || null;
+
+        if (storedLastPlayed && storedLastPlayed.index === currentAudioIndex) {
+          audioRef.current.currentTime = storedLastPlayed.position;
+        }
+
+        audioRef.current.play();
+      }
+    };
+
+    loadAudio();
+  }, [audioFile, currentAudioIndex]);
 
   const handleDelete = () => {
     const newPlaylist = [...playlist];
@@ -107,10 +133,12 @@ const App = () => {
     setPlaylist(newPlaylist);
     localStorage.setItem("playlist", JSON.stringify(newPlaylist));
   };
+
   const handleDeleteAll = () => {
     localStorage.clear();
     setPlaylist([]);
   };
+
   const onPlay = (index) => {
     setCurrentAudioIndex(index);
   };
@@ -129,6 +157,7 @@ const App = () => {
         audioFile={audioFile}
         onAudioEnd={handleAudioEnd}
         onTimeUpdate={handleTimeUpdate}
+        audioRef={audioRef}
       />
     </div>
   );
