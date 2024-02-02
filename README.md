@@ -7,7 +7,7 @@ The Audio Player App is a React-based web application that allows users to uploa
 ## Table of Contents
 
 - [Audio Player App](#audio-player-app)
-  - [File Structure](#file-structure)
+  - [Project Structure](#project-structure)
   - [Features](#features)
   - [Technologies](#technologies)
   - [Approach](#approach)
@@ -16,56 +16,68 @@ The Audio Player App is a React-based web application that allows users to uploa
   - [Usage](#usage)
   - [Hosted Link/ Live Preview](https://react-audio-player-web-ppp.vercel.app/)
 
+# Project Structure
+
+This repository follows a clean and organized structure to enhance readability and maintainability.
+
 ## File Structure
 
-The file structure of the Audio Player App is as follows:
-
-    ```bash
-
-src/
-|-- components/
-| |-- FileUploader/
-| | |-- FileUploader.jsx
-| |-- Playlist/
-| | |-- Playlist.jsx
-| |-- AudioPlayer/
-| | |-- AudioPlayer.jsx
-|-- App.css
-|-- App.jsx
-
+```bash
+.
+├── public
+│   └── index.html
+├── src
+│   ├── components
+│   │   ├── AudioPlayer
+│   │   │   └── AudioPlayer.jsx
+│   │   ├── FileUploader
+│   │   │   └── FileUploader.jsx
+│   │   ├── Playlist
+│   │   │   └── Playlist.jsx
+│   ├── App.jsx
+│   ├── index.js
+├── .gitignore
+├── package.json
+├── README.md
+└── other configuration files
 ```
 
 ## Features
 
 1. **File Upload**
+
    - Users can upload audio files (e.g., mp3).
    - Utilizes the FileUploader component to handle file uploads.
 
 2. **Audio Storage**
+
    - Stores audio files using built-in Browser APIs.
    - Uses localStorage to store the playlist and individual audio files.
 
 3. **Playlist and Now Playing View**
+
    - Displays a dynamic playlist in the Playlist component.
    - Shows a sleek now playing view in the AudioPlayer component.
 
 4. **Playback Control**
+
    - Users can easily play any file from the playlist.
    - Playback seamlessly continues to the next file upon completion.
    - Utilizes standard HTML audio player controls for intuitive playback.
 
 5. **Persistent State**
+
    - Saves the last playing audio file and its position in localStorage.
    - Upon page reload, the app loads the last playing audio file and continues playback from the last position.
 
 6. **Standard HTML Audio Player**
+
    - Incorporates the standard built-in HTML audio player.
    - Avoids third-party players for simplicity, ensuring a lightweight and native experience.
 
 7. **Responsive Design**
    - Utilizes Tailwind CSS for a responsive and mobile-friendly design.
    - Ensures a consistent and enjoyable user experience across various devices.
-```
 
 ## Technologies
 
